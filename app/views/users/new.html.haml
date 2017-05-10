@@ -1,0 +1,53 @@
+:css
+  .form{
+    position: absolute;
+    padding-top:10%;
+    padding-left:20%;
+    width:100%;
+    height: 100%;
+  }
+.form
+  = form_for(@user,:html => {:multipart => true}) do |f|
+    .row
+      .col-md-1
+        %span 用户名
+      .col-md-8
+        = f.text_field :username,class:'form-control'
+    .row
+      .col-md-1
+        %span 密码
+      .col-md-8
+        = f.text_field :password,class:'form-control'
+    .row
+      .col-md-1
+        %span 年龄
+      .col-md-8
+        = f.text_field :age,class:'form-control'
+    .row
+      .col-md-1
+        %span 性别
+      .col-md-8
+        = f.text_field :sex,class:'form-control'
+    .row
+      .col-md-1
+        %span 地址
+      .col-md-8
+        = f.text_field :address,class:'form-control'
+    .row
+      .col-md-1
+        %span 头像
+      .col-md-8
+        = f.text_field :photo,class:'form-control',type:'file'
+    .row
+      .col-md-1
+        %span 生日
+      .col-md-8
+        = f.text_field :birthday,class:'form-control'
+    .row
+      .col-md-1
+        %span 邮箱
+      .col-md-8
+        = f.text_field :email,class:'form-control'
+    .row
+      = f.submit '注册',class:'btn btn-primary'
+      = link_to '返回登录', users_path,class:'btn btn-primary'

@@ -1,0 +1,232 @@
+:css
+  body {
+    background-color: #efefef;
+  }
+
+  input {
+    color: #ffffff
+  }
+
+  #wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+  }
+
+  #wrapper-inner {
+    position: absolute;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 5%;
+    float: right;
+    padding-right: 5%;
+    width:50%;
+    height:100%;
+    top:0;
+    bottom: 0;
+    margin-left: 50%;
+  }
+
+  #tip {
+    color: #fff;
+    opacity: 0;
+    transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -webkit-transition: opacity 1s;
+    -o-transition: opacity 1s;
+  }
+
+  #tip.show {
+    opacity: 1
+  }
+
+  #record{
+    width:100%;
+  }
+  .text{
+    padding-top:5%;
+    padding-left: 20%;
+    padding-right: 20%;
+    display: -webkit-box;
+  }
+
+  input{
+    background-color: #eaf3f7;
+  }
+
+  .his{
+    width:100%;
+    position: absolute;
+    padding-top:5%;
+    padding-left: 20%;
+    padding-right: 20%;
+  }
+
+  .msg{
+    display: inline-flex;
+    margin-bottom: 10px;
+    width:90%;
+  }
+  .msg-text{
+    font-size: 25px;
+    width:90%;
+    background-color: #ffe0e0;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right:5px;
+
+  }
+  .photo{
+    border-radius: 5px;
+  }
+
+  .right{
+    float: right;
+  }
+  .left{
+    float: left;
+  }
+
+
+.text
+  %input.form-control{type:'text',id:'content'}
+  #submit.btn.btn-primary 发送
+.his
+
+
+.hidden
+  %audio{source:'',type:'audio/mp3'}
+
+
+
+
+:javascript
+  var img = "#{@img}"
+  function insert_msg(text) {
+    str = "<div class='msg row right'><div class='msg-text text-right'>" + text + "</div><div class='photo'><img src='" + img + "' height='50' width='40'></div></div>"
+    return str
+  }
+  $('#submit').click(function() {
+    var text = $('#content').val()
+    if(text == '')
+    {
+      return false
+    }
+    var audio = $('audio')
+    window.msg.unshift(insert_msg(text))
+    $.ajax({url: "/talker/index_ajax",data: {text:text},type:'post',success: (function (data) {
+        audio[0].src = data.src
+        audio[0].play()
+        window.msg.unshift(data.html)
+        flu()
+      })})
+    $('#content').val('')
+  })
+  window.msg = []
+  function flu() {
+    if (window.msg.length > 8){
+      window.msg.pop()
+    }
+    $('.his')[0].innerHTML = msg.join('\n')
+  }
+
+  document.onkeydown = function(e) {
+    if(e && e.keyCode == 13){
+      $('#submit').click()
+    }
+  }
+  //
+  // var AudioContext = window.AudioContext || window.webkitAudioContext; //Cross browser variant.
+  //
+  // var canvas, ctx;
+  // var audioContext;
+  // var file;
+  // var fileContent;
+  // var audioBufferSourceNode;
+  // var analyser;
+  //
+  // var loadFile = function() {
+  //   var fileReader = new FileReader();
+  //   fileReader.onload = function(e) {
+  //     fileContent = e.target.result;
+  //     decodecFile();
+  //   }
+  //   fileReader.readAsArrayBuffer(file);
+  // }
+  //
+  // var decodecFile = function() {
+  //   audioContext.decodeAudioData(fileContent, function(buffer) {
+  //     start(buffer);
+  //   });
+  // }
+  //
+  // var start = function(buffer) {
+  //   if(audioBufferSourceNode) {
+  //     audioBufferSourceNode.stop();
+  //   }
+  //
+  //   audioBufferSourceNode = audioContext.createBufferSource();
+  //   audioBufferSourceNode.connect(analyser);
+  //   analyser.connect(audioContext.destination);
+  //   audioBufferSourceNode.buffer = buffer;
+  //   audioBufferSourceNode.start(0);
+  //   showTip(false);
+  //   window.requestAnimationFrame(render); //先判断是否已经调用一次
+  // }
+  //
+  // var showTip = function(show) {
+  //   var tip = document.getElementById('tip');
+  //   if (show) {
+  //     tip.className = "show";
+  //   } else {
+  //     tip.className = "";
+  //   }
+  // }
+  //
+  // var render = function() {
+  //   ctx = canvas.getContext("2d");
+  //   ctx.strokeStyle = "#00d0ff";
+  //   ctx.lineWidth = 2;
+  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //
+  //   var dataArray = new Uint8Array(analyser.frequencyBinCount);
+  //   analyser.getByteFrequencyData(dataArray);
+  //   var step = Math.round(dataArray.length / 60);
+  //
+  //   for (var i = 0; i < 40; i++) {
+  //     var energy = (dataArray[step * i] / 256.0) * 50;
+  //     for (var j = 0; j < energy; j++) {
+  //       ctx.beginPath();
+  //       ctx.moveTo(20 * i + 2, 200 + 4 * j);
+  //       ctx.lineTo(20 * (i + 1) - 2, 200 + 4 * j);
+  //       ctx.stroke();
+  //       ctx.beginPath();
+  //       ctx.moveTo(20 * i + 2, 200 - 4 * j);
+  //       ctx.lineTo(20 * (i + 1) - 2, 200 - 4 * j);
+  //       ctx.stroke();
+  //     }
+  //     ctx.beginPath();
+  //     ctx.moveTo(20 * i + 2, 200);
+  //     ctx.lineTo(20 * (i + 1) - 2, 200);
+  //     ctx.stroke();
+  //   }
+  //
+  //   window.requestAnimationFrame(render);
+  // }
+  //
+  // window.onload = function() {
+  //   audioContext = new AudioContext();
+  //   analyser = audioContext.createAnalyser();
+  //   analyser.fftSize = 256;
+  //
+  //   var fileChooser = document.getElementById('fileChooser');
+  //   fileChooser.onchange = function() {
+  //     if (fileChooser.files[0]) {
+  //       file = fileChooser.files[0];
+  //       showTip(true);
+  //       loadFile();
+  //     }
+  //   }
+  //
+  //   canvas = document.getElementById('visualizer');
+  // }

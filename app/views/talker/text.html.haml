@@ -1,0 +1,20 @@
+%h1 Talker#text
+%p Find me in app/views/talker/text.html.haml
+
+%input.form-control{id:'content'}
+.btn.btn-primary#submit 提交
+%h1#response
+
+:javascript
+  $('#submit').click(function() {
+    var text = $('#content').val()
+    $.ajax({
+      url:'/talker/text_ajax',
+      type:'post',
+      data:{text:text},
+      success:function(data) {
+        // $('#response').val(data)
+        console.log(data)
+      }
+    })
+  })

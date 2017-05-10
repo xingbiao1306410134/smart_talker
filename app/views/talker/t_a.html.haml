@@ -1,0 +1,19 @@
+%h1 Talker#t_a
+%p Find me in app/views/talker/t_a.html.haml
+%input.form-control{type:'text',id:'content'}
+#submit.btn.btn-primary 提交
+
+.hidden
+  %audio{source:'',type:'audio/mp3'}
+
+
+
+:javascript
+  $('#submit').click(function() {
+    var text = $('#content').val()
+    var audio = $('audio')
+    $.ajax({url: "/talker/t_a_ajax",data: {text:text},type:'post',success: (function (data) {
+        audio[0].src = data
+        audio[0].play()
+      })})
+  })
